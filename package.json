@@ -1,0 +1,29 @@
+{
+  "name": "challangemob",
+  "version": "1.0.0",
+  "description": "This is platform to share the challenges by the users with a great audience",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch './src/**/*.ts' --exec ts-node ./src/index.ts",
+    "build": "tsc; tscpaths -p tsconfig.json -s src -o dist",
+    "start": "node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:narasimha-1511/challangeMob.git"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "cookie-session": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "zod": "^3.23.8"
+  }
+}
