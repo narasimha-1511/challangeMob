@@ -1,4 +1,9 @@
 import Server from "./apps/server";
+import Database from "./apps/database";
+import { parseEnv } from "./env";
 
-const server = new Server();
+parseEnv();
+
+const database = new Database();
+const server = new Server(database);
 server.start();
