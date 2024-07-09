@@ -1,6 +1,6 @@
 import Express, { Express as TExpress, Request, Response } from "express";
 import cookieSession from "cookie-session";
-import logger from "../middlewares/logger.middleware";
+// import logger from "../middlewares/logger.middleware";
 import getEnvVar from "../env/index";
 import { Idatabase } from "../interfaces";
 import Context from "../models/Context";
@@ -18,7 +18,7 @@ export default class Server {
 
   #registerMiddlewares() {
     this.engine.use(Express.json());
-    this.engine.use(logger);
+    // this.engine.use(logger);
     this.engine.use(cors());
 
     this.engine.use(
