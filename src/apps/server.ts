@@ -6,6 +6,7 @@ import { Idatabase } from "../interfaces";
 import Context from "../models/Context";
 import login from "./firebase";
 import cors from "cors";
+import dbbb from "./ff";
 
 export default class Server {
   db: Idatabase;
@@ -54,6 +55,30 @@ export default class Server {
             login: false,
           });
         });
+    });
+
+    interface courseData {
+      week: number;
+      title: string;
+      img_src: string;
+      new_field: string;
+      assests: any[];
+    }
+
+    this.engine.get("/courses", async (req: Request, res: Response) => {
+      try {
+        const courseCollectionn = await dbbb.collection("course").get();
+
+        const courses: courseData[] = [];
+
+        courseCollectionn.forEach((doc: any) => {
+          courses.push({ ...(doc.data() as courseData) });
+        });
+
+        return res.json({ courses });
+      } catch (err) {
+        return res.json({ message: err });
+      }
     });
   }
 
