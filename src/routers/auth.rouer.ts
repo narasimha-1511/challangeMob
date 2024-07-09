@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
 
-PrismaClient.apply({});
+// PrismaClient.apply({});
 
-export default class AuthRouter {}
+// export default class AuthRouter {}
