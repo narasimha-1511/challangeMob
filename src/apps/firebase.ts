@@ -1,9 +1,16 @@
 import { initializeApp } from "firebase/app";
+// import admin from "firebase-admin";
+
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
+
+// admin.initializeApp({
+//   credential: admin.credential.applicationDefault(),
+// });
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIOGWKZNhtUsr7OZS9xTrVQDuEbxSSAPY",
@@ -18,6 +25,22 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+
+export const resetPassword = async (email: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    sendPasswordResetEmail(auth, email)
+    .then(() => {
+      //@ts-ignore
+      resolve("Reset email sent!");
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorCode, errorMessage);
+      reject("Reset email failed!");
+    });
+  });
+};
 
 const login = async (email: string, password: string): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -36,6 +59,8 @@ const login = async (email: string, password: string): Promise<void> => {
       });
   });
 };
+
+// resetPassword("s.narasimha.2005@gmail.com");
 
 export default login;
 

@@ -5,7 +5,7 @@ import logger from "../middlewares/logger.middleware";
 import getEnvVar from "../env/index";
 import { Idatabase } from "../interfaces";
 import Context from "../models/Context";
-import login from "./firebase";
+import login, { resetPassword } from "./firebase";
 import cors from "cors";
 import dbbb from "./ff";
 import Jwt from "@src/utils/jwt";
@@ -19,12 +19,26 @@ export default class Server {
     this.engine = Express();
   }
 
+
   #registerMiddlewares() {
+    const allowedOrigins = [
+      "https://challengeplatform.vercel.app",
+      "https://www.thechallengemob.tech",
+    ];
+
     this.engine.use(Express.json());
     this.engine.use(logger);
     this.engine.use(
       cors({
-        origin: "https://challengeplatform.vercel.app",
+        origin: function (origin, callback) {
+          if (!origin) return callback(null, true); // Allow requests with no origin, like mobile apps or curl requests
+          if (allowedOrigins.indexOf(origin) === -1) {
+            const msg =
+              "The CORS policy for this site does not allow access from the specified origin.";
+            return callback(new Error(msg), false);
+          }
+          return callback(null, true);
+        },
         credentials: true,
       })
     );
@@ -131,6 +145,25 @@ export default class Server {
         return res.status(400).json({ message: "Internal server error" });
       }
     });
+
+    this.engine.get("/forgotpass", async (req: Request, res: Response) => {
+      try{
+        const { email } = req.body;
+        resetPassword(email)
+        .then((ress) => {
+          console.log(ress);
+          return res.json({ message: "Reset email sent!" });
+        })
+        .catch((error) => {
+          console.log(error);
+          return res.json({ message: "Reset email failed!" });
+        }
+      }
+      catch(err){
+        console.log("error while forgot passwordx" , err);
+        return res.status(400).json({ message: "Internal server error" });
+      }
+    }
   }
 
   start() {
