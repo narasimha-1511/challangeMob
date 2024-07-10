@@ -8,6 +8,8 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 
+import { getFirestore, Firestore } from "firebase/firestore";
+
 // admin.initializeApp({
 //   credential: admin.credential.applicationDefault(),
 // });
@@ -25,6 +27,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
+
+// export const firestoreFetching = (): Firestore => {
+//   const fdb = getFirestore();
+
+//   const courseCollectionn = 
+
+//   return fdb;
+// };
 
 export const resetPassword = async (email: string): Promise<void> => {
   return new Promise((resolve, reject) => {
