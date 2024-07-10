@@ -1,5 +1,5 @@
 import Express, { Express as TExpress, Request, Response } from "express";
-import cookieSession from "cookie-session";
+// import cookieSession from "cookie-session";
 import logger from "../middlewares/logger.middleware";
 import getEnvVar from "../env/index";
 import { Idatabase } from "../interfaces";
@@ -23,12 +23,12 @@ export default class Server {
     this.engine.use(logger);
     this.engine.use(cors());
 
-    this.engine.use(
-      cookieSession({
-        signed: false,
-        secure: false,
-      })
-    );
+    // this.engine.use(
+    //   cookieSession({
+    //     signed: false,
+    //     secure: false,
+    //   })
+    // );
 
     this.engine.get("/health", (_, res) => {
       return res.sendStatus(200);
@@ -49,13 +49,13 @@ export default class Server {
 
           res.cookie("jwt", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
+            sameSite: "none",
           });
 
           return res.json({
             message: "Logged in successfully",
             login: true,
-            token,
           });
         })
         .catch((error) => {
@@ -76,6 +76,8 @@ export default class Server {
 
     this.engine.get("/coursess", async (req: Request, res: Response) => {
       try {
+        console.log(req.headers);
+        console.log(req.cookies);
         const jwttoken = req.cookies.jwt;
 
         if (!jwttoken) {
@@ -83,6 +85,8 @@ export default class Server {
         }
 
         const decoded = Jwt.verify(jwttoken);
+
+        console.log(decoded);
 
         if (!decoded) {
           return res.json({ message: "Unauthorized" });
@@ -98,6 +102,7 @@ export default class Server {
 
         return res.json({ courses });
       } catch (err) {
+        console.log(err);
         return res.status(400).json({ message: "Internal server error" });
       }
     });
@@ -114,6 +119,7 @@ export default class Server {
 
         return res.json({ courses });
       } catch (err) {
+        console.log(err);
         return res.status(400).json({ message: "Internal server error" });
       }
     });
