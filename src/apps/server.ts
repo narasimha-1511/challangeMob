@@ -147,23 +147,22 @@ export default class Server {
     });
 
     this.engine.get("/forgotpass", async (req: Request, res: Response) => {
-      try{
+      try {
         const { email } = req.body;
         resetPassword(email)
-        .then((ress) => {
-          console.log(ress);
-          return res.json({ message: "Reset email sent!" });
-        })
-        .catch((error) => {
-          console.log(error);
-          return res.json({ message: "Reset email failed!" });
-        }
-      }
-      catch(err){
-        console.log("error while forgot passwordx" , err);
+          .then((ress) => {
+            console.log(ress);
+            return res.json({ message: "Reset email sent!" });
+          })
+          .catch((error) => {
+            console.log(error);
+            return res.json({ message: "Reset email failed!" });
+          });
+      } catch (err) {
+        console.log("error while forgot passwordx", err);
         return res.status(400).json({ message: "Internal server error" });
       }
-    }
+    });
   }
 
   start() {
