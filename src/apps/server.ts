@@ -146,7 +146,7 @@ export default class Server {
       }
     });
 
-    this.engine.get("/forgotpass", async (req: Request, res: Response) => {
+    this.engine.post("/forgotpass", async (req: Request, res: Response) => {
       try {
         const { email } = req.body;
         resetPassword(email)
