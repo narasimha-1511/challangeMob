@@ -22,7 +22,12 @@ export default class Server {
   #registerMiddlewares() {
     this.engine.use(Express.json());
     this.engine.use(logger);
-    this.engine.use(cors());
+    this.engine.use(
+      cors({
+        origin: "https://challengeplatform.vercel.app",
+        credentials: true,
+      })
+    );
     this.engine.use(cookies());
 
     // this.engine.use(
@@ -83,6 +88,7 @@ export default class Server {
         const jwttoken = req.cookies.jwt;
 
         if (!jwttoken) {
+          console.log("No token");
           return res.json({ message: "Unauthorized" });
         }
 
