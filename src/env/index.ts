@@ -4,6 +4,7 @@ import { config } from "dotenv";
 const envSchema = z.object({
   SERVER_PORT: z.string(),
   DATABASE_URL: z.string(),
+  JWT_SECRET: z.string(),
 });
 
 export const parseEnv = (): void => {

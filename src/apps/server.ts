@@ -1,12 +1,13 @@
 import Express, { Express as TExpress, Request, Response } from "express";
 import cookieSession from "cookie-session";
-// import logger from "../middlewares/logger.middleware";
+import logger from "../middlewares/logger.middleware";
 import getEnvVar from "../env/index";
 import { Idatabase } from "../interfaces";
 import Context from "../models/Context";
 import login from "./firebase";
 import cors from "cors";
 import dbbb from "./ff";
+import Jwt from "@src/utils/jwt";
 
 export default class Server {
   db: Idatabase;
@@ -19,7 +20,7 @@ export default class Server {
 
   #registerMiddlewares() {
     this.engine.use(Express.json());
-    // this.engine.use(logger);
+    this.engine.use(logger);
     this.engine.use(cors());
 
     this.engine.use(
@@ -43,10 +44,18 @@ export default class Server {
       const { username, password } = req.body;
 
       await login(username, password)
-        .then((result) => {
+        .then(async (result) => {
+          const token = Jwt.sign(username);
+
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: false,
+          });
+
           return res.json({
-            message: result,
+            message: "Logged in successfully",
             login: true,
+            token,
           });
         })
         .catch((error) => {
@@ -65,6 +74,34 @@ export default class Server {
       assests: any[];
     }
 
+    this.engine.get("/coursess", async (req: Request, res: Response) => {
+      try {
+        const jwttoken = req.cookies.jwt;
+
+        if (!jwttoken) {
+          return res.json({ message: "Unauthorized" });
+        }
+
+        const decoded = Jwt.verify(jwttoken);
+
+        if (!decoded) {
+          return res.json({ message: "Unauthorized" });
+        }
+
+        const courseCollectionn = await dbbb.collection("course").get();
+
+        const courses: courseData[] = [];
+
+        courseCollectionn.forEach((doc: any) => {
+          courses.push({ ...(doc.data() as courseData) });
+        });
+
+        return res.json({ courses });
+      } catch (err) {
+        return res.status(400).json({ message: "Internal server error" });
+      }
+    });
+
     this.engine.get("/courses", async (req: Request, res: Response) => {
       try {
         const courseCollectionn = await dbbb.collection("course").get();
@@ -77,7 +114,7 @@ export default class Server {
 
         return res.json({ courses });
       } catch (err) {
-        return res.json({ message: err });
+        return res.status(400).json({ message: "Internal server error" });
       }
     });
   }
