@@ -50,7 +50,7 @@ export default class Server {
           const token = Jwt.sign(username);
 
           res.cookie("jwt", token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
             sameSite: "none",
           });
@@ -76,7 +76,7 @@ export default class Server {
       assests: any[];
     }
 
-    this.engine.get("/courses", async (req: Request, res: Response) => {
+    this.engine.get("/coursess", async (req: Request, res: Response) => {
       try {
         console.log(req.headers);
         console.log(req.cookies);
@@ -109,7 +109,7 @@ export default class Server {
       }
     });
 
-    this.engine.get("/coursess", async (req: Request, res: Response) => {
+    this.engine.get("/courses", async (req: Request, res: Response) => {
       try {
         const courseCollectionn = await dbbb.collection("course").get();
 
