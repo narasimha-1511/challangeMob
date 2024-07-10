@@ -1,5 +1,6 @@
 import Express, { Express as TExpress, Request, Response } from "express";
 // import cookieSession from "cookie-session";
+import cookies from "cookie-parser";
 import logger from "../middlewares/logger.middleware";
 import getEnvVar from "../env/index";
 import { Idatabase } from "../interfaces";
@@ -22,6 +23,7 @@ export default class Server {
     this.engine.use(Express.json());
     this.engine.use(logger);
     this.engine.use(cors());
+    this.engine.use(cookies());
 
     // this.engine.use(
     //   cookieSession({
@@ -74,7 +76,7 @@ export default class Server {
       assests: any[];
     }
 
-    this.engine.get("/coursess", async (req: Request, res: Response) => {
+    this.engine.get("/courses", async (req: Request, res: Response) => {
       try {
         console.log(req.headers);
         console.log(req.cookies);
@@ -107,7 +109,7 @@ export default class Server {
       }
     });
 
-    this.engine.get("/courses", async (req: Request, res: Response) => {
+    this.engine.get("/coursess", async (req: Request, res: Response) => {
       try {
         const courseCollectionn = await dbbb.collection("course").get();
 
