@@ -69,6 +69,7 @@ export default class Server {
           const token = Jwt.sign(username);
 
           res.cookie("jwt", token, {
+            maxAge: 1000 * 60 * 60 * 24 * 15,
             httpOnly: false,
             secure: true,
             sameSite: "none",

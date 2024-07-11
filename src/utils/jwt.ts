@@ -4,7 +4,7 @@ import { CustomJWTPayload } from "@src/types/jwt.types";
 
 export default class Jwt {
   static sign(payload: string): string {
-    return sign({ id: payload }, getEnvVar("JWT_SECRET"), {
+    return sign({ payload }, getEnvVar("JWT_SECRET"), {
       expiresIn: "15d",
     });
   }
